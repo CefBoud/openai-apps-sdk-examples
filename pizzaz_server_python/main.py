@@ -8,7 +8,7 @@ handlers into an HTTP/SSE stack so you can run the server with uvicorn on port
 8000, matching the Node transport behavior."""
 
 from __future__ import annotations
-
+import os
 from copy import deepcopy
 from dataclasses import dataclass
 from functools import lru_cache
@@ -96,6 +96,15 @@ widgets: List[PizzazWidget] = [
         html=_load_widget_html("pizzaz-shop"),
         response_text="Rendered the Pizzaz shop!",
     ),
+    PizzazWidget(
+        identifier="pizza-timer",
+        title="Show Pizza Timer",
+        template_uri="ui://widget/pizza-timer.html",
+        invoking="Starting the timer",
+        invoked="Timer started",
+        html=_load_widget_html("pizzaz-timer"),
+        response_text="Rendered a pizza timer!",
+    ),
 ]
 
 
@@ -152,6 +161,10 @@ def _tool_meta(widget: PizzazWidget) -> Dict[str, Any]:
         "openai/toolInvocation/invoked": widget.invoked,
         "openai/widgetAccessible": True,
         "openai/resultCanProduceWidget": True,
+        "openai/widgetCSP": {
+            "connect_domains": [os.environ["DOMAIN"]],
+            "resource_domains": [os.environ["DOMAIN"], "https://*.oaistatic.com"],
+        },
     }
 
 

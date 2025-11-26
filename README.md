@@ -1,3 +1,44 @@
+## 📦 One-Command Installer for Bare Debian Machines
+
+This fork introduces an **automated installation script** (`install.sh`) that provisions the example application Pizzaz on a fresh Debian host. It also adds a **timer component** to the app to display the remaining wait time.
+
+
+### What the Script Does
+
+The installer performs the following actions:
+
+* Installs required system packages (`nodejs`, `git`, `pnpm`, etc.)
+* Clones the `openai-apps-sdk-examples` repository into `/app`
+* Builds the frontend using the supplied domain as the `BASE_URL`
+* Installs Python dependencies using **uv**, creates a virtual environment, and runs the backend server
+* Installs and configures **Caddy** as a reverse proxy
+* Automatically provisions **HTTPS certificates** via Let's Encrypt / ACME
+
+### Requirements
+
+Before running the installer, ensure:
+
+* You are using a **fresh or minimally configured Debian machine**
+* A **domain name already points to your machine's public IP address**
+* Port **80** and **443** are open so Caddy can obtain TLS certificates
+
+### Usage
+
+On a bare debian machine Run the installer with your domain (no `https://`):
+
+```bash
+curl -sSL https://raw.githubusercontent.com/cefboud/openai-apps-sdk-examples/main/install.sh | bash -s  oai-app.example.com
+```
+
+Or you can clone the repo, and run the script::
+
+```bash
+./install.sh oai-app.example.com
+```
+
+The script configures Caddy to serve the built frontend and proxy API requests to the backend running on `localhost:8000`.
+
+
 # Apps SDK Examples Gallery
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
